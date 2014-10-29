@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="f1" displayName="inc" projectFiles="true">
+      <logicalFolder name="f1" displayName="common" projectFiles="true">
+        <itemPath>inc/common/mini-clist.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="nvmalloc" projectFiles="true">
+        <itemPath>inc/nvmalloc/nvmalloc.c</itemPath>
+        <itemPath>inc/nvmalloc/nvmalloc.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="slab" projectFiles="true">
+        <itemPath>inc/slab/slab.c</itemPath>
+        <itemPath>inc/slab/slab.h</itemPath>
+      </logicalFolder>
+      <itemPath>inc/handler.h</itemPath>
+      <itemPath>inc/interface.h</itemPath>
+      <itemPath>src/mmap_alloc.c</itemPath>
+      <itemPath>inc/mmap_alloc.h</itemPath>
+      <itemPath>inc/nv_alloc.c</itemPath>
+      <itemPath>inc/nv_alloc.h</itemPath>
+      <itemPath>inc/ram_alloc.c</itemPath>
+      <itemPath>inc/ram_alloc.h</itemPath>
+      <itemPath>inc/slab_alloc.c</itemPath>
+      <itemPath>inc/slab_alloc.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="f2" displayName="src" projectFiles="true">
+      <itemPath>src/handler.c</itemPath>
+      <itemPath>src/main.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>inc</Elem>
+    <Elem>src</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <incDir>
+            <pElem>inc</pElem>
+          </incDir>
+          <commandLine>-msse4.2</commandLine>
+        </cTool>
+        <linkerTool>
+          <output>bin/zallocd</output>
+          <linkerLibItems>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="inc/common/mini-clist.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/handler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/interface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/mmap_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/nv_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/nv_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/nvmalloc/nvmalloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/nvmalloc/nvmalloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/ram_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/ram_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/slab/slab.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/slab/slab.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/slab_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/slab_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/mmap_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="inc/common/mini-clist.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/handler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/interface.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/mmap_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/nv_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/nv_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/nvmalloc/nvmalloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/nvmalloc/nvmalloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/ram_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/ram_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/slab/slab.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/slab/slab.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/slab_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/slab_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="src/handler.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="src/mmap_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>
