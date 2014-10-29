@@ -41,8 +41,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/inc/slab/slab.o \
 	${OBJECTDIR}/inc/slab_alloc.o \
 	${OBJECTDIR}/src/handler.o \
-	${OBJECTDIR}/src/main.o \
-	${OBJECTDIR}/src/mmap_alloc.o
+	${OBJECTDIR}/src/main.o
 
 
 # C Compiler Flags
@@ -103,11 +102,6 @@ ${OBJECTDIR}/src/main.o: src/main.c
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.c
-
-${OBJECTDIR}/src/mmap_alloc.o: src/mmap_alloc.c 
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/mmap_alloc.o src/mmap_alloc.c
 
 # Subprojects
 .build-subprojects:

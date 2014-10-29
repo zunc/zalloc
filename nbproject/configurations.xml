@@ -15,7 +15,7 @@
       </logicalFolder>
       <itemPath>inc/handler.h</itemPath>
       <itemPath>inc/interface.h</itemPath>
-      <itemPath>src/mmap_alloc.c</itemPath>
+      <itemPath>inc/mmap_alloc.c</itemPath>
       <itemPath>inc/mmap_alloc.h</itemPath>
       <itemPath>inc/nv_alloc.c</itemPath>
       <itemPath>inc/nv_alloc.h</itemPath>
@@ -72,6 +72,8 @@
       </item>
       <item path="inc/interface.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="inc/mmap_alloc.c" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="inc/mmap_alloc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="inc/nv_alloc.c" ex="false" tool="0" flavor2="0">
@@ -97,8 +99,6 @@
       <item path="src/handler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/main.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/mmap_alloc.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -127,6 +127,8 @@
       </item>
       <item path="inc/interface.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="inc/mmap_alloc.c" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="inc/mmap_alloc.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="inc/nv_alloc.c" ex="false" tool="0" flavor2="0">
@@ -152,8 +154,6 @@
       <item path="src/handler.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="src/main.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="src/mmap_alloc.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
   </confs>
