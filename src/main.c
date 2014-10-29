@@ -74,12 +74,21 @@ void test_all() {
 int main(int argc, char** argv) {
 	test_all();
 	//--- test region
-	//	struct zalloc *zac = handler_get("mmap");
-	//	int i;
-	//	for (i=0; i < 10; i++) {
-	//		char *mem = zac->malloc(10);
-	//		if (mem)
-	//			strcpy(mem, "123456789");
-	//	}
+//	struct zalloc *zac = handler_get("buddy");
+//	if (!zac) {
+//		printf("allocate handler not found\n");
+//		return 1;
+//	}
+//	int i;
+//	for (i = 0; i < 10; i++) {
+//		char *mem = zac->malloc(10);
+//		if (!mem) {
+//			printf("out of memory\n");
+//			break;
+//		}
+//
+//		strcpy(mem, "123456789");
+//		zac->free(mem);
+//	}
 	return (EXIT_SUCCESS);
 }

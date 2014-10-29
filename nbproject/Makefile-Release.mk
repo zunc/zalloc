@@ -35,6 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/inc/buddy/buddy.o \
+	${OBJECTDIR}/inc/buddy_alloc.o \
 	${OBJECTDIR}/inc/nv_alloc.o \
 	${OBJECTDIR}/inc/nvmalloc/nvmalloc.o \
 	${OBJECTDIR}/inc/ram_alloc.o \
@@ -67,6 +69,16 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zalloc: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.c} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/zalloc ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/inc/buddy/buddy.o: inc/buddy/buddy.c 
+	${MKDIR} -p ${OBJECTDIR}/inc/buddy
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy/buddy.o inc/buddy/buddy.c
+
+${OBJECTDIR}/inc/buddy_alloc.o: inc/buddy_alloc.c 
+	${MKDIR} -p ${OBJECTDIR}/inc
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy_alloc.o inc/buddy_alloc.c
 
 ${OBJECTDIR}/inc/nv_alloc.o: inc/nv_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc

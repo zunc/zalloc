@@ -2,6 +2,10 @@
 <configurationDescriptor version="95">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <logicalFolder name="f1" displayName="inc" projectFiles="true">
+      <logicalFolder name="f4" displayName="buddy" projectFiles="true">
+        <itemPath>inc/buddy/buddy.c</itemPath>
+        <itemPath>inc/buddy/buddy.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="common" projectFiles="true">
         <itemPath>inc/common/mini-clist.h</itemPath>
       </logicalFolder>
@@ -13,6 +17,8 @@
         <itemPath>inc/slab/slab.c</itemPath>
         <itemPath>inc/slab/slab.h</itemPath>
       </logicalFolder>
+      <itemPath>inc/buddy_alloc.c</itemPath>
+      <itemPath>inc/buddy_alloc.h</itemPath>
       <itemPath>inc/handler.h</itemPath>
       <itemPath>inc/interface.h</itemPath>
       <itemPath>inc/mmap_alloc.c</itemPath>
@@ -66,6 +72,14 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="inc/buddy/buddy.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/buddy/buddy.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/buddy_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/buddy_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="inc/common/mini-clist.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="inc/handler.h" ex="false" tool="3" flavor2="0">
@@ -121,6 +135,14 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="inc/buddy/buddy.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/buddy/buddy.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="inc/buddy_alloc.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="inc/buddy_alloc.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="inc/common/mini-clist.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="inc/handler.h" ex="false" tool="3" flavor2="0">

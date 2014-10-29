@@ -40,12 +40,12 @@
 #define LIKELY(exp) __builtin_expect(exp, 1)
 #define UNLIKELY(exp) __builtin_expect(exp, 0)
 
-size_t slab_pagesize = 4096;
-
-#ifndef NDEBUG
+size_t slab_pagesize = 1024 * 1024;
+#define NDEBUG 0
 
 static int
 slab_is_valid(struct slab_chain *sch) {
+#ifndef NDEBUG
 	assert(POWEROF2(slab_pagesize));
 	assert(POWEROF2(sch->slabsize));
 	assert(POWEROF2(sch->pages_per_alloc));
@@ -94,8 +94,9 @@ slab_is_valid(struct slab_chain *sch) {
 
 				if (sch->slabsize >= slab_pagesize)
 					assert((uintptr_t) slab->page % sch->slabsize == 0);
-				else
+				else {
 					assert((uintptr_t) slab->page % slab_pagesize == 0);
+				}
 			} else {
 				if (sch->slabsize >= slab_pagesize)
 					assert((uintptr_t) slab % sch->slabsize == 0);
@@ -106,10 +107,9 @@ slab_is_valid(struct slab_chain *sch) {
 			prev = slab;
 		}
 	}
-
+#endif
 	return 1;
 }
-#endif
 
 void
 slab_init(struct slab_chain *sch, size_t itemsize) {
@@ -118,6 +118,9 @@ slab_init(struct slab_chain *sch, size_t itemsize) {
 	assert(POWEROF2(slab_pagesize));
 
 	sch->itemsize = itemsize;
+
+	//sch->itemcount = slab_pagesize / sch->itemsize;
+	//size_t least_slabsize = data_offset + sch->itemcount * sch->itemsize;
 
 	size_t data_offset = offsetof(struct slab_header, data);
 	size_t least_slabsize = data_offset + 64 * sch->itemsize;
@@ -197,6 +200,7 @@ slab_alloc(struct slab_chain *sch) {
 				return sch->partial = NULL;
 			}
 		} else {
+			/* slabsize lager than slab_pagesize*/
 			int err = posix_memalign((void **) &sch->partial,
 					sch->slabsize, sch->pages_per_alloc);
 

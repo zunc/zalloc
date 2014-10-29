@@ -49,7 +49,6 @@ static void __mmap_handler_init(void) {
 	memblock = mmap(NULL, sb.st_size, PROT_WRITE, MAP_SHARED, fd, 0);
 	if (memblock == MAP_FAILED)
 		perror("mmap");
-	close(fd);
 	
 	pos_ = 0;
 	remain_ = sb.st_size;
@@ -61,4 +60,5 @@ static void __mmap_handler_init(void) {
 __attribute__((destructor))
 static void __mmap_handler_deinit() {
 	munmap(memblock, sb.st_size);
+	close(fd);
 }
