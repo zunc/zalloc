@@ -13,8 +13,6 @@
 #include "buddy_alloc.h"
 #include "buddy/buddy.h"
 
-// 2^26 = 67108864
-
 // map region
 #define MAP_PATH "/home/khoai/Desktop/research/alloc/box/buddy.blo"
 char *memblock;
@@ -22,11 +20,14 @@ int fd;
 struct stat sb;
 
 // buddy region
-static unsigned buddy_level = 26;
+static unsigned buddy_level = 16; // 2^26 = 67108864
 struct buddy *buddy;
 
 void* buddy_xmalloc(size_t size) {
 	int pos = buddy_alloc(buddy, size);
+	if (pos < 0) {
+		return NULL;
+	}
 	return (memblock + pos);
 }
 
@@ -38,23 +39,23 @@ __attribute__((constructor))
 static void __buddy_handler_init(void) {
 	buddy = buddy_new(buddy_level);
 	int size = 1 << buddy_level;
-	
+
 	// mmap
 	if ((fd = open(MAP_PATH, O_RDWR | O_CREAT)) == 0) {
 		perror("__buddy_handler_init. open file fail\n");
 		return;
 	}
-	
+
 	fstat(fd, &sb);
 	if (size > sb.st_size) {
 		printf("file size smaller buffer size\n");
 		return;
 	}
-	
+
 	memblock = mmap(NULL, sb.st_size, PROT_WRITE, MAP_SHARED, fd, 0);
 	if (memblock == MAP_FAILED)
 		perror("mmap");
-	
+
 	handler_register(&buddy_handler);
 }
 

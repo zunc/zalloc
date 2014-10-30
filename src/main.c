@@ -34,8 +34,10 @@
 //    printf("%s: %d -> %ldns\n", func_name, ret, span);
 //}
 
-#define ALLOC_TOTAL 1000000
+#define ALLOC_TOTAL 10000
 #define ALLOC_SIZE	100
+
+#define IS_FREE 0
 
 void timeit(struct zalloc *h) {
 	struct timespec start;
@@ -51,13 +53,15 @@ void timeit(struct zalloc *h) {
 			printf("\tout of memory, step(%d)\n", i);
 			break;
 		}
-		memset(ret, 'a', ALLOC_SIZE);
-		h->free(ret);
+//		memset(ret, 'a', ALLOC_SIZE);
+		strcpy(ret, "123456789");
+		if (IS_FREE)
+			h->free(ret);
 	}
 	clock_gettime(CLOCK_REALTIME, &end);
 
 	span = (end.tv_sec - start.tv_sec)*1000000000 + (end.tv_nsec - start.tv_nsec);
-	printf(" - %s\t-> %ldns, %ldms\n", h->name, span, (long int) (span / 1000000));
+	printf(" \t-> %ldns, %ldms\n", span, (long int) (span / 1000000));
 }
 
 void test_all() {
@@ -72,23 +76,25 @@ void test_all() {
 }
 
 int main(int argc, char** argv) {
-	test_all();
+//	test_all();
 	//--- test region
-//	struct zalloc *zac = handler_get("buddy");
-//	if (!zac) {
-//		printf("allocate handler not found\n");
-//		return 1;
-//	}
-//	int i;
-//	for (i = 0; i < 10; i++) {
-//		char *mem = zac->malloc(10);
-//		if (!mem) {
-//			printf("out of memory\n");
-//			break;
-//		}
-//
-//		strcpy(mem, "123456789");
+	struct zalloc *zac = handler_get("buddy");
+	if (!zac) {
+		printf("allocate handler not found\n");
+		return 1;
+	}
+	int i;
+	for (i = 0; i < 16; i++) {
+		int sz = 1 << (i+1);
+		char *mem = zac->malloc(sz);
+		if (!mem) {
+			printf("out of memory\n");
+			break;
+		}
+
+		printf("malloc(%d)\n", sz);
+		strcpy(mem, "blah blah blah");
 //		zac->free(mem);
-//	}
+	}
 	return (EXIT_SUCCESS);
 }

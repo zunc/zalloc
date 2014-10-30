@@ -4,34 +4,48 @@
 #include <stdint.h>
 #include <assert.h>
 #include <string.h>
+#include <math.h>
 
 #define NODE_UNUSED 0
-#define NODE_USED 1	
-#define NODE_SPLIT 2
-#define NODE_FULL 3
+#define NODE_USED	1	
+#define NODE_SPLIT	2
+#define NODE_FULL	3
 
 struct buddy {
-	int level;
+	uint8_t level;
 	uint8_t tree[1];
+	// mutex
 };
+
+#define PAGE_SIZE 1024
+
+static inline int
+is_pow_of_2(uint32_t x) {
+	return !(x & (x - 1));
+}
 
 struct buddy *
 buddy_new(int level) {
-	int size = 1 << level;
-	struct buddy * self = malloc(sizeof (struct buddy) + sizeof (uint8_t) * (size * 2 - 2));
-	self->level = level;
-	memset(self->tree, NODE_UNUSED, size * 2 - 1);
+	int size_total = 1 << level;
+	if (!is_pow_of_2(PAGE_SIZE)) {
+		printf("PAGE_SIZE is_not_pow_of_2\n");
+		return NULL;
+	}
+	if (size_total < PAGE_SIZE) {
+		printf("size_total(%d) smaller PAGE_SIZE(%d)\n", size_total, PAGE_SIZE);
+		return NULL;
+	}
+
+	int size_idx = ceil(size_total / PAGE_SIZE);
+	struct buddy * self = malloc(sizeof (struct buddy) + sizeof (uint8_t) * size_idx - 1);
+	self->level = log2(size_idx);
+	memset(self->tree, NODE_UNUSED, size_idx);
 	return self;
 }
 
 void
 buddy_delete(struct buddy * self) {
 	free(self);
-}
-
-static inline int
-is_pow_of_2(uint32_t x) {
-	return !(x & (x - 1));
 }
 
 static inline uint32_t
@@ -48,7 +62,7 @@ next_pow_of_2(uint32_t x) {
 
 static inline int
 _index_offset(int index, int level, int max_level) {
-	return ((index + 1) - (1 << level)) << (max_level - level);
+	return PAGE_SIZE * (((index + 1) - (1 << level)) << (max_level - level));
 }
 
 static void
@@ -66,14 +80,11 @@ _mark_parent(struct buddy * self, int index) {
 
 int
 buddy_alloc(struct buddy * self, int s) {
-	int size;
-	if (s == 0) {
+	int size = ceil(s / PAGE_SIZE);
+	if (size == 0)
 		size = 1;
-	} else {
-		size = (int) next_pow_of_2(s);
-	}
-	int length = 1 << self->level;
 
+	int length = 1 << self->level;
 	if (size > length)
 		return -1;
 
@@ -141,7 +152,8 @@ _combine(struct buddy * self, int index) {
 }
 
 void
-buddy_free(struct buddy * self, int offset) {
+buddy_free(struct buddy * self, int _offset) {
+	int offset = _offset / PAGE_SIZE;
 	assert(offset < (1 << self->level));
 	int left = 0;
 	int length = 1 << self->level;
