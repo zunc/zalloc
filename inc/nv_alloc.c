@@ -16,7 +16,7 @@ void nv_free(void *ptr) {
 __attribute__((constructor))
 static void __nv_handler_init(void) {
 	nvmalloc_init(size / 4096, 0);
-	handler_register(&nv_handler);
+//	handler_register(&nv_handler);
 }
 
 __attribute__((destructor))

@@ -34,10 +34,10 @@
 //    printf("%s: %d -> %ldns\n", func_name, ret, span);
 //}
 
-#define ALLOC_TOTAL 10000
-#define ALLOC_SIZE	100
+#define ALLOC_TOTAL 1000000
+#define ALLOC_SIZE	10000
 
-#define IS_FREE 0
+#define IS_FREE 1
 
 void timeit(struct zalloc *h) {
 	struct timespec start;
@@ -77,15 +77,15 @@ void test_all() {
 
 int main(int argc, char** argv) {
 //	test_all();
-	//--- test region
+//	//--- test region
 	struct zalloc *zac = handler_get("buddy");
 	if (!zac) {
 		printf("allocate handler not found\n");
 		return 1;
 	}
 	int i;
-	for (i = 0; i < 16; i++) {
-		int sz = 1 << (i+1);
+	for (i = 0; i < 66; i++) {
+		int sz = 100;//1 << (i+1);
 		char *mem = zac->malloc(sz);
 		if (!mem) {
 			printf("out of memory\n");

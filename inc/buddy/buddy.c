@@ -37,7 +37,8 @@ buddy_new(int level) {
 	}
 
 	int size_idx = ceil(size_total / PAGE_SIZE);
-	struct buddy * self = malloc(sizeof (struct buddy) + sizeof (uint8_t) * size_idx - 1);
+	int size_tree = sizeof (uint8_t) * pow(2, log2(size_idx) + 1) - 1;
+	struct buddy * self = malloc(sizeof (struct buddy) + size_tree - 1);
 	self->level = log2(size_idx);
 	memset(self->tree, NODE_UNUSED, size_idx);
 	return self;
@@ -80,7 +81,7 @@ _mark_parent(struct buddy * self, int index) {
 
 int
 buddy_alloc(struct buddy * self, int s) {
-	int size = ceil(s / PAGE_SIZE);
+	int size = next_pow_of_2(ceil(s / PAGE_SIZE));
 	if (size == 0)
 		size = 1;
 
