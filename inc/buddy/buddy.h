@@ -10,13 +10,15 @@
 #ifndef BUDDY_H
 #define	BUDDY_H
 
+#include <stdint.h>
+
 struct buddy;
 
 struct buddy * buddy_new(int level);
 void buddy_delete(struct buddy *);
-int buddy_alloc(struct buddy *, int size);
-void buddy_free(struct buddy *, int offset);
-int buddy_size(struct buddy *, int offset);
+uint64_t buddy_alloc(struct buddy *, uint64_t size);
+void buddy_free(struct buddy *, uint64_t offset);
+uint64_t buddy_size(struct buddy *, uint64_t offset);
 void buddy_dump(struct buddy *);
 
 #endif	/* BUDDY_H */

@@ -22,6 +22,14 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/zalloc
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Release=zalloc.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/zalloc.tar
+# Library_Debug configuration
+CND_PLATFORM_Library_Debug=GNU-Linux-x86
+CND_ARTIFACT_DIR_Library_Debug=bin
+CND_ARTIFACT_NAME_Library_Debug=zallocd.so
+CND_ARTIFACT_PATH_Library_Debug=bin/zallocd.so
+CND_PACKAGE_DIR_Library_Debug=dist/Library_Debug/GNU-Linux-x86/package
+CND_PACKAGE_NAME_Library_Debug=libzalloc.so.tar
+CND_PACKAGE_PATH_Library_Debug=dist/Library_Debug/GNU-Linux-x86/package/libzalloc.so.tar
 #
 # include compiler specific variables
 #
