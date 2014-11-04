@@ -35,17 +35,22 @@ void* buddy_xmalloc(size_t size) {
 		pthread_mutex_unlock(&lock);
 		return NULL;
 	}
-	printf(" - virtual_pointer(0x%lx), pos_alloc(0x%lx)\n", (uint64_t) memblock + pos, pos);
+//	printf(" - virtual_pointer(0x%lx), pos_alloc(0x%lx)\n", (uint64_t) memblock + pos, pos);
 	pthread_mutex_unlock(&lock);
 	return (memblock + pos);
 }
 
 void buddy_xfree(void *ptr) {
 	pthread_mutex_lock(&lock);
-	printf(" - free(0x%lx)\n", (uint64_t) ptr);
+//	printf(" - free(0x%lx)\n", (uint64_t) ptr);
 	assert((uint64_t) ptr > (uint64_t) memblock);
 	buddy_free(buddy, (ptr - (void*) memblock));
 	pthread_mutex_unlock(&lock);
+}
+
+size_t buddy_get_size(void *ptr) {
+	size_t used = buddy_used_size(buddy, (ptr - (void*) memblock));
+	return used;
 }
 
 __attribute__((constructor))

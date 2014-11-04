@@ -17,6 +17,7 @@ struct zalloc {
 	void* (*calloc)(size_t number, size_t size);
 	void* (*realloc)(void *ptr, size_t size);
 	void (*free)(void *ptr);
+	size_t (*get_size)(void *ptr);
 	struct list list;
 };
 

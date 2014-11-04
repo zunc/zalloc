@@ -15,6 +15,7 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <assert.h>
 #include "handler.h"
 
 /*
@@ -105,7 +106,8 @@ int main(int argc, char** argv) {
 				break;
 			}
 
-			printf("malloc(%ld)\n", sz);
+			size_t used_size = zac->get_size(mem);
+			printf("malloc(%ld), used_size(%ld)\n", sz, used_size);
 			strcpy(mem, "blah blah blah");
 			//zac->free(mem);
 		}
@@ -121,7 +123,7 @@ int main(int argc, char** argv) {
 
 			printf("malloc(%ld)\n", huge_size);
 			memset(mem, i, 100);
-			//zac->free(mem);
+			//			zac->free(mem);
 		}
 	}
 	printf("done\n");
@@ -131,12 +133,14 @@ int main(int argc, char** argv) {
 
 #if LIB
 // for zalloc library
+// <!> don't select ram mode
+#define ALLOC "buddy"
 
 void* malloc(size_t size) {
-	struct zalloc *zac = handler_get("buddy");
-	printf("malloc: %ld\n", size);
+	struct zalloc *zac = handler_get(ALLOC);
+	assert(zac);
 	void *ptr = zac->malloc(size);
-	memset(ptr, 0, size);
+	printf("malloc: %ld -> 0x%lx\n", size, (uint64_t) ptr);
 	return ptr;
 }
 
@@ -144,30 +148,56 @@ void free(void *ptr) {
 	// filter NULL pointer
 	if (!ptr)
 		return;
-	struct zalloc *zac = handler_get("buddy");
-	//	printf("free: %lx\n", (unsigned long) ptr);
+	struct zalloc *zac = handler_get(ALLOC);
+	assert(zac);
+	printf("free: 0x%lx\n", (unsigned long) ptr);
 	return zac->free(ptr);
 }
 
 void *realloc(void *ptr, size_t size) {
-	free(ptr);
-	return malloc(size);
+	printf(" <!> realloc: ptr(0x%0lx), size(%ld)\n", (uint64_t) ptr, size);
+	if (!ptr)
+		return malloc(size);
+
+	struct zalloc *zac = handler_get(ALLOC);
+	assert(zac);
+	void *new_ptr = zac->malloc(size);
+	if (!new_ptr)
+		return NULL;
+	size_t old_size = zac->get_size(ptr);
+	memcpy(new_ptr, ptr, old_size);
+	zac->free(ptr);
+	printf(" \t -> 0x%lx, old_size(%ld)\n", (uint64_t) new_ptr, old_size);
+	return new_ptr;
 }
 
 void* calloc(size_t num, size_t size) {
-	struct zalloc *zac = handler_get("buddy");
+	struct zalloc *zac = handler_get(ALLOC);
+	assert(zac);
 	printf("calloc: num(%ld), size(%ld)\n", num, size);
-	return malloc(num * size);
+	void *ptr = malloc(num * size);
+	memset(ptr, 0, num * size);
+	return ptr;
 }
 
-int posix_memalign(void **ptr, size_t alignment, size_t size) {
-	printf(" <!> posix_memalign\n");
+int posix_memalign(void **res, size_t align, size_t len) {
+	// lazy coding
+	printf(" <!> posix_memalign: align(%lx), size(%ld)\n", align, len);
+	void *ptr = malloc(len);
+	if (!ptr)
+		return 1;
+	*res = ptr;
 	return 0;
 }
 
-void *aligned_alloc(size_t alignment, size_t size) {
-	printf(" <!> aligned_alloc\n");
-	return 0;
+void *memalign(size_t align, size_t len) {
+	void *mem;
+	int ret;
+	if ((ret = posix_memalign(&mem, align, len))) {
+		errno = ret;
+		return 0;
+	}
+	return mem;
 }
 
 #endif

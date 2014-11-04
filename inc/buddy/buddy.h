@@ -18,7 +18,8 @@ struct buddy * buddy_new(int level);
 void buddy_delete(struct buddy *);
 uint64_t buddy_alloc(struct buddy *, uint64_t size);
 void buddy_free(struct buddy *, uint64_t offset);
-uint64_t buddy_size(struct buddy *, uint64_t offset);
+uint64_t buddy_page_size(struct buddy * self, uint64_t offset);
+uint64_t buddy_used_size(struct buddy *, uint64_t offset);
 void buddy_dump(struct buddy *);
 
 #endif	/* BUDDY_H */

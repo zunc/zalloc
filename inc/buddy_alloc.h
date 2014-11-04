@@ -12,11 +12,13 @@
 
 void* buddy_xmalloc(size_t size);
 void buddy_xfree(void *ptr);
+size_t buddy_get_size(void *ptr);
 
 struct zalloc buddy_handler = {
 	.name = "buddy",
 	.malloc = buddy_xmalloc,
-	.free = buddy_xfree
+	.free = buddy_xfree,
+	.get_size = buddy_get_size
 };
 
 #endif	/* BUDDY_ALLOC_H */
