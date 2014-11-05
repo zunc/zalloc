@@ -120,7 +120,7 @@ _mark_parent(struct buddy * self, uint64_t index) {
 
 uint64_t
 buddy_alloc(struct buddy * self, uint64_t s) {
-	uint64_t size = next_pow_of_2(ceil(s / PAGE_SIZE));
+	uint64_t size = next_pow_of_2(ceil((float) s / PAGE_SIZE));
 	if (size == 0)
 		size = 1;
 

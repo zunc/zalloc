@@ -73,47 +73,47 @@ bin/zallocd.so: ${OBJECTFILES}
 ${OBJECTDIR}/inc/buddy/buddy.o: inc/buddy/buddy.c 
 	${MKDIR} -p ${OBJECTDIR}/inc/buddy
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy/buddy.o inc/buddy/buddy.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy/buddy.o inc/buddy/buddy.c
 
 ${OBJECTDIR}/inc/buddy_alloc.o: inc/buddy_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy_alloc.o inc/buddy_alloc.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy_alloc.o inc/buddy_alloc.c
 
 ${OBJECTDIR}/inc/nv_alloc.o: inc/nv_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/nv_alloc.o inc/nv_alloc.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/nv_alloc.o inc/nv_alloc.c
 
 ${OBJECTDIR}/inc/nvmalloc/nvmalloc.o: inc/nvmalloc/nvmalloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc/nvmalloc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/nvmalloc/nvmalloc.o inc/nvmalloc/nvmalloc.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/nvmalloc/nvmalloc.o inc/nvmalloc/nvmalloc.c
 
 ${OBJECTDIR}/inc/ram_alloc.o: inc/ram_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/ram_alloc.o inc/ram_alloc.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/ram_alloc.o inc/ram_alloc.c
 
 ${OBJECTDIR}/inc/slab/slab.o: inc/slab/slab.c 
 	${MKDIR} -p ${OBJECTDIR}/inc/slab
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/slab/slab.o inc/slab/slab.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/slab/slab.o inc/slab/slab.c
 
 ${OBJECTDIR}/inc/slab_alloc.o: inc/slab_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/slab_alloc.o inc/slab_alloc.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/slab_alloc.o inc/slab_alloc.c
 
 ${OBJECTDIR}/src/handler.o: src/handler.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler.o src/handler.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler.o src/handler.c
 
 ${OBJECTDIR}/src/main.o: src/main.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.c
+	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.c
 
 # Subprojects
 .build-subprojects:

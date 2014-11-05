@@ -19,11 +19,11 @@ void slab_xfree(void *ptr) {
 
 __attribute__((constructor))
 static void __nv_handler_init(void) {
-	slab_init(&slab, SLAB_SIZE);
+//	slab_init(&slab, SLAB_SIZE);
 //	handler_register(&slab_handler);
 }
 
 __attribute__((destructor))
 static void __nv_handler_deinit(void) {
-	slab_destroy(&slab);
+//	slab_destroy(&slab);
 }

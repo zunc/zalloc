@@ -17,7 +17,7 @@
 #include <sys/resource.h>
 #include <assert.h>
 #include "handler.h"
-
+#include "common/dbg.h"
 /*
  * 
  */
@@ -26,6 +26,7 @@
 #define ALLOC_SIZE	4096
 
 #define IS_FREE 0
+#define IS_LOG 1
 
 void timeit(struct zalloc *h) {
 	struct timespec start;
@@ -88,8 +89,21 @@ void wait_command() {
 int main(int argc, char** argv) {
 	limit_config();
 	//	test_all();
-	//--- test region
+	//--- overlap test
 	if (1) {
+		int sz1 = 0x1004;
+		int sz2 = 0x1008;
+		struct zalloc *zac = handler_get("buddy");
+		assert(zac);
+		char *ptr1 = zac->malloc(sz1);
+		char *ptr2 = zac->malloc(sz2);
+		printf(" - ptr1(0x%lx)\n", (uint64_t) ptr1);
+		printf(" - ptr2(0x%lx)\n", (uint64_t) ptr2);
+		printf(" -> range(0x%lx)\n", (uint64_t) abs(ptr1 - ptr2));
+	}
+
+	//--- test region
+	if (0) {
 		struct zalloc *zac = handler_get("buddy");
 		if (!zac) {
 			printf("allocate handler not found\n");
@@ -132,15 +146,18 @@ int main(int argc, char** argv) {
 }
 
 #if LIB
+pthread_mutex_t lock_alloc;
 // for zalloc library
 // <!> don't select ram mode
 #define ALLOC "buddy"
 
 void* malloc(size_t size) {
+	pthread_mutex_lock(&lock_alloc);
 	struct zalloc *zac = handler_get(ALLOC);
-	assert(zac);
+	//	assert(zac);
 	void *ptr = zac->malloc(size);
-	printf("malloc: %ld -> 0x%lx\n", size, (uint64_t) ptr);
+	log_dbg("malloc: 0x%ld -> 0x%lx", size, (uint64_t) ptr);
+	pthread_mutex_unlock(&lock_alloc);
 	return ptr;
 }
 
@@ -148,41 +165,51 @@ void free(void *ptr) {
 	// filter NULL pointer
 	if (!ptr)
 		return;
+	pthread_mutex_lock(&lock_alloc);
 	struct zalloc *zac = handler_get(ALLOC);
-	assert(zac);
-	printf("free: 0x%lx\n", (unsigned long) ptr);
-	return zac->free(ptr);
+	//	assert(zac);
+	log_dbg("free: 0x%lx", (unsigned long) ptr);
+	zac->free(ptr);
+	pthread_mutex_unlock(&lock_alloc);
+
 }
 
-void *realloc(void *ptr, size_t size) {
-	printf(" <!> realloc: ptr(0x%0lx), size(%ld)\n", (uint64_t) ptr, size);
-	if (!ptr)
-		return malloc(size);
+#define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 
+void *realloc(void *ptr, size_t size) {
+	log_warn(" <!> realloc: ptr(0x%0lx), size(%ld)", (uint64_t) ptr, size);
+	pthread_mutex_lock(&lock_alloc);
 	struct zalloc *zac = handler_get(ALLOC);
-	assert(zac);
+	//	assert(zac);
 	void *new_ptr = zac->malloc(size);
-	if (!new_ptr)
-		return NULL;
-	size_t old_size = zac->get_size(ptr);
-	memcpy(new_ptr, ptr, old_size);
-	zac->free(ptr);
-	printf(" \t -> 0x%lx, old_size(%ld)\n", (uint64_t) new_ptr, old_size);
+	if (new_ptr) {
+		if (ptr) {
+			size_t old_size = zac->get_size(ptr);
+			size_t size_copy = MIN(size, old_size);
+			memcpy(new_ptr, ptr, size_copy);
+			zac->free(ptr);
+
+			log_dbg(" \t -> 0x%lx, old_size(%ld)", (uint64_t) new_ptr, old_size);
+		}
+	}
+	pthread_mutex_unlock(&lock_alloc);
 	return new_ptr;
 }
 
 void* calloc(size_t num, size_t size) {
+	pthread_mutex_lock(&lock_alloc);
 	struct zalloc *zac = handler_get(ALLOC);
-	assert(zac);
-	printf("calloc: num(%ld), size(%ld)\n", num, size);
-	void *ptr = malloc(num * size);
+	//	assert(zac);
+	log_dbg("calloc: num(%ld), size(%ld)", num, size);
+	void *ptr = zac->malloc(num * size);
 	memset(ptr, 0, num * size);
+	pthread_mutex_unlock(&lock_alloc);
 	return ptr;
 }
 
 int posix_memalign(void **res, size_t align, size_t len) {
 	// lazy coding
-	printf(" <!> posix_memalign: align(%lx), size(%ld)\n", align, len);
+	log_err(" <!> posix_memalign: align(%lx), size(%ld)", align, len);
 	void *ptr = malloc(len);
 	if (!ptr)
 		return 1;
@@ -198,6 +225,26 @@ void *memalign(size_t align, size_t len) {
 		return 0;
 	}
 	return mem;
+}
+
+void *aligned_alloc(size_t align, size_t len) {
+	log_err(" <!> aligned_alloc: align(%lx), size(%ld)", align, len);
+	return NULL;
+}
+
+__attribute__((constructor))
+static void __zalloc_lib_init(void) {
+	if (pthread_mutex_init(&lock_alloc, NULL) != 0) {
+		log_dbg("mutex init failed");
+		return;
+	}
+	log_dbg("init mutex");
+}
+
+__attribute__((destructor))
+static void __zalloc_lib_deinit(void) {
+	pthread_mutex_destroy(&lock_alloc);
+	log_dbg("destroy mutex");
 }
 
 #endif

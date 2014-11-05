@@ -18,6 +18,7 @@ struct zalloc {
 	void* (*realloc)(void *ptr, size_t size);
 	void (*free)(void *ptr);
 	size_t (*get_size)(void *ptr);
+	size_t (*get_page_size)(void *ptr);
 	struct list list;
 };
 
