@@ -18,6 +18,9 @@
 #include <assert.h>
 #include "handler.h"
 #include "common/dbg.h"
+#include "buddy_alloc.h"
+
+struct zalloc buddy_handler;
 /*
  * 
  */
@@ -26,7 +29,7 @@
 #define ALLOC_SIZE	4096
 
 #define IS_FREE 0
-#define IS_LOG 1
+#define IS_LOG 0
 
 void timeit(struct zalloc *h) {
 	struct timespec start;
@@ -67,12 +70,12 @@ void test_all() {
 void limit_config() {
 	struct rlimit limit;
 	limit.rlim_max = limit.rlim_cur = 26;
-	if (setrlimit(RLIMIT_AS, &limit)) {
+	if (setrlimit(RLIMIT_DATA, &limit)) {
 		printf("get limit fail: %s\n", strerror(errno));
 		return;
 	}
 
-	if (getrlimit(RLIMIT_AS, &limit)) {
+	if (getrlimit(RLIMIT_DATA, &limit)) {
 		printf("get limit fail: %s\n", strerror(errno));
 		return;
 	}
@@ -86,11 +89,29 @@ void wait_command() {
 	return;
 }
 
+#if !LIB
+void *realloc(void *ptr, size_t size);
 int main(int argc, char** argv) {
 	limit_config();
 	//	test_all();
-	//--- overlap test
+	//--- realloc test
 	if (1) {
+		int max_pow = 26;
+		int i;
+		struct zalloc *zac = handler_get("buddy");
+		assert(zac);
+		char *mem = NULL;
+		for (i=0; i < max_pow; i++) {
+			int size = 1 << i;
+			log_info("realloc: %d", size);
+			mem = realloc(mem, size);
+			if (!mem)
+				log_err("toi");
+		}
+	}
+	
+	//--- overlap test
+	if (0) {
 		int sz1 = 0x1004;
 		int sz2 = 0x1008;
 		struct zalloc *zac = handler_get("buddy");
@@ -144,51 +165,21 @@ int main(int argc, char** argv) {
 	wait_command();
 	return (EXIT_SUCCESS);
 }
-
-#if LIB
-pthread_mutex_t lock_alloc;
-// for zalloc library
-// <!> don't select ram mode
-#define ALLOC "buddy"
-
-void* malloc(size_t size) {
-	pthread_mutex_lock(&lock_alloc);
-	struct zalloc *zac = handler_get(ALLOC);
-	//	assert(zac);
-	void *ptr = zac->malloc(size);
-	log_dbg("malloc: 0x%ld -> 0x%lx", size, (uint64_t) ptr);
-	pthread_mutex_unlock(&lock_alloc);
-	return ptr;
-}
-
-void free(void *ptr) {
-	// filter NULL pointer
-	if (!ptr)
-		return;
-	pthread_mutex_lock(&lock_alloc);
-	struct zalloc *zac = handler_get(ALLOC);
-	//	assert(zac);
-	log_dbg("free: 0x%lx", (unsigned long) ptr);
-	zac->free(ptr);
-	pthread_mutex_unlock(&lock_alloc);
-
-}
+#endif
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
-
+// <!> don't select ram mode
+pthread_mutex_t lock_alloc;
 void *realloc(void *ptr, size_t size) {
-	log_warn(" <!> realloc: ptr(0x%0lx), size(%ld)", (uint64_t) ptr, size);
+//	log_warn(" <!> realloc: ptr(0x%0lx), size(%ld)", (uint64_t) ptr, size);
 	pthread_mutex_lock(&lock_alloc);
-	struct zalloc *zac = handler_get(ALLOC);
-	//	assert(zac);
-	void *new_ptr = zac->malloc(size);
+	void *new_ptr = buddy_xmalloc(size);
 	if (new_ptr) {
 		if (ptr) {
-			size_t old_size = zac->get_size(ptr);
+			size_t old_size = buddy_get_size(ptr);
 			size_t size_copy = MIN(size, old_size);
 			memcpy(new_ptr, ptr, size_copy);
-			zac->free(ptr);
-
+			buddy_xfree(ptr);
 			log_dbg(" \t -> 0x%lx, old_size(%ld)", (uint64_t) new_ptr, old_size);
 		}
 	}
@@ -196,12 +187,39 @@ void *realloc(void *ptr, size_t size) {
 	return new_ptr;
 }
 
+#if LIB
+// for zalloc library
+void* malloc(size_t size) {
+	pthread_mutex_lock(&lock_alloc);
+	void *ptr = buddy_xmalloc(size);
+	log_dbg("malloc: 0x%ld -> 0x%lx", size, (uint64_t) ptr);
+	pthread_mutex_unlock(&lock_alloc);
+	return ptr;
+}
+
+int isDeinit;
+
+void free(void *ptr) {
+	// filter NULL pointer
+	if (!ptr)
+		return;
+	
+	pthread_mutex_lock(&lock_alloc);
+	//	assert(zac);
+	if (isDeinit) {
+		log_err("free: 0x%lx", (unsigned long) ptr);
+	} else {
+		log_dbg("free: 0x%lx", (unsigned long) ptr);
+	}
+	buddy_xfree(ptr);
+	pthread_mutex_unlock(&lock_alloc);
+
+}
+
 void* calloc(size_t num, size_t size) {
 	pthread_mutex_lock(&lock_alloc);
-	struct zalloc *zac = handler_get(ALLOC);
-	//	assert(zac);
 	log_dbg("calloc: num(%ld), size(%ld)", num, size);
-	void *ptr = zac->malloc(num * size);
+	void *ptr = buddy_xmalloc(num * size);
 	memset(ptr, 0, num * size);
 	pthread_mutex_unlock(&lock_alloc);
 	return ptr;

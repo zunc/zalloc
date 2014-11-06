@@ -37,13 +37,14 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/inc/buddy/buddy.o \
 	${OBJECTDIR}/inc/buddy_alloc.o \
+	${OBJECTDIR}/inc/foot.o \
 	${OBJECTDIR}/inc/nv_alloc.o \
 	${OBJECTDIR}/inc/nvmalloc/nvmalloc.o \
 	${OBJECTDIR}/inc/ram_alloc.o \
 	${OBJECTDIR}/inc/slab/slab.o \
 	${OBJECTDIR}/inc/slab_alloc.o \
 	${OBJECTDIR}/src/handler.o \
-	${OBJECTDIR}/src/main.o
+	${OBJECTDIR}/src/zalloc.o
 
 
 # C Compiler Flags
@@ -60,7 +61,7 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=-lm
+LDLIBSOPTIONS=-lm -ldl
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
@@ -73,47 +74,52 @@ bin/zallocd.so: ${OBJECTFILES}
 ${OBJECTDIR}/inc/buddy/buddy.o: inc/buddy/buddy.c 
 	${MKDIR} -p ${OBJECTDIR}/inc/buddy
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy/buddy.o inc/buddy/buddy.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy/buddy.o inc/buddy/buddy.c
 
 ${OBJECTDIR}/inc/buddy_alloc.o: inc/buddy_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy_alloc.o inc/buddy_alloc.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy_alloc.o inc/buddy_alloc.c
+
+${OBJECTDIR}/inc/foot.o: inc/foot.c 
+	${MKDIR} -p ${OBJECTDIR}/inc
+	${RM} "$@.d"
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/foot.o inc/foot.c
 
 ${OBJECTDIR}/inc/nv_alloc.o: inc/nv_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/nv_alloc.o inc/nv_alloc.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/nv_alloc.o inc/nv_alloc.c
 
 ${OBJECTDIR}/inc/nvmalloc/nvmalloc.o: inc/nvmalloc/nvmalloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc/nvmalloc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/nvmalloc/nvmalloc.o inc/nvmalloc/nvmalloc.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/nvmalloc/nvmalloc.o inc/nvmalloc/nvmalloc.c
 
 ${OBJECTDIR}/inc/ram_alloc.o: inc/ram_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/ram_alloc.o inc/ram_alloc.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/ram_alloc.o inc/ram_alloc.c
 
 ${OBJECTDIR}/inc/slab/slab.o: inc/slab/slab.c 
 	${MKDIR} -p ${OBJECTDIR}/inc/slab
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/slab/slab.o inc/slab/slab.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/slab/slab.o inc/slab/slab.c
 
 ${OBJECTDIR}/inc/slab_alloc.o: inc/slab_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/slab_alloc.o inc/slab_alloc.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/slab_alloc.o inc/slab_alloc.c
 
 ${OBJECTDIR}/src/handler.o: src/handler.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler.o src/handler.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler.o src/handler.c
 
-${OBJECTDIR}/src/main.o: src/main.c 
+${OBJECTDIR}/src/zalloc.o: src/zalloc.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -g -DLIB=1 -DDEBUG=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.c
+	$(COMPILE.c) -g -DLIB=1 -Iinc -fPIC  -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/zalloc.o src/zalloc.c
 
 # Subprojects
 .build-subprojects:

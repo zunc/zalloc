@@ -15,13 +15,7 @@ void buddy_xfree(void *ptr);
 size_t buddy_get_size(void *ptr);
 size_t buddy_get_page_size(void *ptr);
 
-struct zalloc buddy_handler = {
-	.name = "buddy",
-	.malloc = buddy_xmalloc,
-	.free = buddy_xfree,
-	.get_size = buddy_get_size,
-	.get_page_size = buddy_get_page_size
-};
+extern int isDeinit;
 
 #endif	/* BUDDY_ALLOC_H */
 

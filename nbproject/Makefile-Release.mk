@@ -37,13 +37,14 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/inc/buddy/buddy.o \
 	${OBJECTDIR}/inc/buddy_alloc.o \
+	${OBJECTDIR}/inc/foot.o \
 	${OBJECTDIR}/inc/nv_alloc.o \
 	${OBJECTDIR}/inc/nvmalloc/nvmalloc.o \
 	${OBJECTDIR}/inc/ram_alloc.o \
 	${OBJECTDIR}/inc/slab/slab.o \
 	${OBJECTDIR}/inc/slab_alloc.o \
 	${OBJECTDIR}/src/handler.o \
-	${OBJECTDIR}/src/main.o
+	${OBJECTDIR}/src/zalloc.o
 
 
 # C Compiler Flags
@@ -80,6 +81,11 @@ ${OBJECTDIR}/inc/buddy_alloc.o: inc/buddy_alloc.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/buddy_alloc.o inc/buddy_alloc.c
 
+${OBJECTDIR}/inc/foot.o: inc/foot.c 
+	${MKDIR} -p ${OBJECTDIR}/inc
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/inc/foot.o inc/foot.c
+
 ${OBJECTDIR}/inc/nv_alloc.o: inc/nv_alloc.c 
 	${MKDIR} -p ${OBJECTDIR}/inc
 	${RM} "$@.d"
@@ -110,10 +116,10 @@ ${OBJECTDIR}/src/handler.o: src/handler.c
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/handler.o src/handler.c
 
-${OBJECTDIR}/src/main.o: src/main.c 
+${OBJECTDIR}/src/zalloc.o: src/zalloc.c 
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} "$@.d"
-	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/main.o src/main.c
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/src/zalloc.o src/zalloc.c
 
 # Subprojects
 .build-subprojects:

@@ -6,6 +6,7 @@
 #include <string.h>
 
 #define LOG_COLOURED 1
+#define DEBUG 0
 
 #ifdef LOG_COLOURED
 #define GRAY(s)   "\033[1;30m" s "\033[0m"
@@ -29,7 +30,7 @@
 
 #define clean_errno() (errno == 0 ? "None" : strerror(errno))
 
-#define log_err(format, ...) log(format, GRAY("ERR"), ## __VA_ARGS__)
+#define log_err(format, ...) log(format, RED("ERR"), ## __VA_ARGS__)
 #define log_fatal(format, ...) log(format, RED("FATAL"), ## __VA_ARGS__); exit(1)
 #define log_warn(format, ...) log(format, YELLOW("WARN"), ## __VA_ARGS__)
 #define log_info(format, ...) log(format, GREEN("INFO"), ## __VA_ARGS__)
